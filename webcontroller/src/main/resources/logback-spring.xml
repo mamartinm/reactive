@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+  <property name="nameApp" value="reactive"/>
+  <!-- @formatter:off -->
+  <property name="patternConsole" value="%boldRed([%thread]) %boldGreen(%d{dd-MM-yy HH:mm:ss.SSS}) %highlight(%-5level) %boldYellow(%logger{0}) %boldMagenta(%C{0}.%M):%boldRed(%L)-%boldBlue(%m %n)"/>
+  <!-- @formatter:on -->
+
+  <springProfile name="dev">
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <charset>utf8</charset>
+        <pattern>${patternConsole}</pattern>
+      </encoder>
+    </appender>
+
+    <logger additivity="false" level="DEBUG" name="APP_LOGGER">
+      <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="WARN">
+      <appender-ref ref="STDOUT"/>
+    </root>
+
+  </springProfile>
+
+  <springProfile name="des">
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <charset>utf8</charset>
+        <pattern>${patternConsole}</pattern>
+      </encoder>
+    </appender>
+
+    <root level="WARN">
+      <appender-ref ref="STDOUT"/>
+    </root>
+
+  </springProfile>
+
+  <springProfile name="pre">
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <charset>utf8</charset>
+        <pattern>${patternConsole}</pattern>
+      </encoder>
+    </appender>
+    <logger additivity="false" level="DEBUG" name="APP_LOGGER">
+      <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="WARN">
+      <appender-ref ref="STDOUT"/>
+    </root>
+
+  </springProfile>
+
+  <springProfile name="pro">
+
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <charset>utf8</charset>
+        <pattern>${patternConsole}</pattern>
+      </encoder>
+    </appender>
+    <logger additivity="false" level="DEBUG" name="APP_LOGGER">
+      <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="ERROR">
+      <appender-ref ref="STDOUT"/>
+    </root>
+
+  </springProfile>
+
+</configuration>
