@@ -54,7 +54,7 @@ public class EntityResourceAssured {
 
   @Test
   public void findById() {
-    final String id = "050453ef-14a3-4841-b0b4-368de0aeda0e";
+    final String id = "4f3ffbda-d5be-4f2a-a836-26a77be6df1a";
     String uri = URL + Constants.SLASH + id;
     Entity result = given()
         .contentType(ContentType.JSON)
