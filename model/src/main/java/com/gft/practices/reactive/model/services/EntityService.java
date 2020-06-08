@@ -1,68 +1,59 @@
 package com.gft.practices.reactive.model.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.practices.reactive.beans.dto.Entity;
-import com.gft.practices.reactive.beans.utils.Constants;
+import com.gft.practices.reactive.model.repository.EntityRepository;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j
-public class EntityService extends BaseService<Entity> {
+public class EntityService extends BaseService<Entity, EntityRepository> {
 
-  // @formatter:off
-  private static final TypeReference<List<Entity>> TO_VALUE_TYPE_REF = new TypeReference<>() {  };
-  // @formatter:on
-  private static final int TIME_TO_RELOAD_CACHE = 30000;
+  private static final int TIME_TO_RELOAD_CACHE = 300000;
   private static final String ENTITY_FIND_ALL = "entity_findAll";
-  private static final String RESULT = "result";
-  private static final String RESULTS = "results";
-  private RestTemplate restTemplate;
-  private ObjectMapper objectMapper;
-  private CacheManager cacheManager;
-
-  @Value("${app.urls.data}")
-  private String urlData;
 
   @Autowired
-  public EntityService(final RestTemplate restTemplate, final ObjectMapper objectMapper, final CacheManager cacheManager) {
-    this.restTemplate = restTemplate;
-    this.objectMapper = objectMapper;
-    this.cacheManager = cacheManager;
+  public EntityService(final EntityRepository repository) {
+    super(repository);
+  }
+
+  @Async
+  public CompletableFuture<List<Entity>> findAll() {
+    return CompletableFuture.supplyAsync(() -> applicationContext.getBean(EntityService.class).createEntitiesFromDataSource());
+  }
+
+  @Async
+  public CompletableFuture<Page<Entity>> findAllPaginated(Pageable pageable) {
+    return CompletableFuture.supplyAsync(() -> {
+      List<Entity> entities = applicationContext.getBean(EntityService.class).createEntitiesFromDataSource();
+      return getPagination(pageable, entities);
+    });
+  }
+
+  @Async
+  public CompletableFuture<Optional<Entity>> findById(String id) {
+    return CompletableFuture.supplyAsync(() -> {
+      List<Entity> entitiesFromDataSource = applicationContext.getBean(EntityService.class).createEntitiesFromDataSource();
+      return entitiesFromDataSource.stream()
+          .filter(entity -> entity.getId().equals(id))
+          .findAny();
+    });
   }
 
   @Cacheable(ENTITY_FIND_ALL)
-  public List<Entity> findAll() {
+  public List<Entity> createEntitiesFromDataSource() {
     log.debug("Se crea cache");
-    List<Map> result = (List<Map>) ((Map) restTemplate.getForObject(urlData, Map.class).get(RESULT)).get(RESULTS);
-    List<Entity> entities = objectMapper.convertValue(result, TO_VALUE_TYPE_REF);
-    for (Entity entity : entities) {
-      entity.setUri(getUriBuilder(Constants.ENTITY).path(entity.getId()).build().encode().toUriString());
-    }
-    return entities;
-  }
-
-  public Page<Entity> findAllPaginated(Pageable pageable) {
-    return getPagination(pageable, applicationContext.getBean(EntityService.class).findAll());
-  }
-
-  public Optional<Entity> findById(String id) {
-    return applicationContext.getBean(EntityService.class).findAll().stream()
-        .filter(entity -> entity.getId().equals(id))
-        .findAny();
+    return repository.createEntitiesFromDataSource();
   }
 
   @Scheduled(fixedRate = TIME_TO_RELOAD_CACHE)
