@@ -1,4 +1,4 @@
-package com.gft.practices.reactive.webcontroller.async;
+package com.gft.practices.reactive.webcontroller.sync;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -26,30 +26,32 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class EntityResourceTests {
 
+  public static final String REST_API_V_1_ENTITY = "/rest/api/v1/entity/";
+  public static final String ID_ENTITY = "4f3ffbda-d5be-4f2a-a836-26a77be6df1a";
   @Autowired
   private WebTestClient webTestClient;
-
   @InjectMocks
   private EntityService entityService;
 
   @Test
   void findById() {
-    String id = "789e5138-ad70-4913-bfb6-fdc50cb3746e";
-    Entity entity1 = Entity.builder().id("1").code("1asdf").description("test1").build();
-    when(entityService.findById("/rest/api/v1/entity/" + id)).thenReturn(Mono.just(entity1));
+
+    Entity entity1 = Entity.builder().id("1").code(ID_ENTITY).description("test1").build();
+    when(entityService.findById(REST_API_V_1_ENTITY + ID_ENTITY)).thenReturn(Mono.just(entity1));
     webTestClient.get()
-        .uri("/rest/api/v1/entity/" + id)
+        .uri(REST_API_V_1_ENTITY + ID_ENTITY)
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus().isOk()
         .expectBody(Entity.class)
-        .value(Entity::getId, equalTo(id));
+        .value(Entity::getId, equalTo(ID_ENTITY));
   }
 
   @Test
   void findAll() {
+    log.debug("1 peticion");
     webTestClient.get()
-        .uri("/rest/api/v1/entity/all")
+        .uri(REST_API_V_1_ENTITY+"all")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus().isOk()
@@ -60,12 +62,11 @@ public class EntityResourceTests {
   @Test
   void findAllPaginated() {
     webTestClient.get()
-        .uri("/rest/api/v1/entity/?page=1&size=5")
+        .uri(REST_API_V_1_ENTITY+"?page=1&size=5")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus().isOk()
         .expectBody(Map.class)
         .value(map -> map.get("size"), is(5));
   }
-
 }
