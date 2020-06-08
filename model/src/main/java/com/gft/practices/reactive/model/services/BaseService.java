@@ -1,5 +1,8 @@
 package com.gft.practices.reactive.model.services;
 
+import static org.springframework.security.config.Elements.HTTP;
+
+import com.gft.practices.reactive.beans.utils.Constants;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public abstract class BaseService<T> {
 
@@ -28,6 +32,10 @@ public abstract class BaseService<T> {
     pagedListHolder.setPageSize(pageable.getPageSize());
     pagedListHolder.setPage(pageable.getPageNumber());
     return new PageImpl<>(pagedListHolder.getPageList(), pageable, alls.size());
+  }
+
+  protected UriComponentsBuilder getUriBuilder(String pathResource) {
+    return UriComponentsBuilder.newInstance().scheme(HTTP).host(hostname).port(port).path(path).path(pathResource).path(Constants.SLASH);
   }
 
 }

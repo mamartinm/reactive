@@ -14,4 +14,5 @@ public class Constants {
   public static final String SLASH = "/";
   public static final String ASTERISK = "*";
   public static final String PATH_PATTERN = "/**";
+  public static final String ENTITY = "/entity";
 }
