@@ -1,4 +1,4 @@
-package com.gft.practices.reactive.webcontroller.sync;
+package com.gft.practices.reactive.webcontroller;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
