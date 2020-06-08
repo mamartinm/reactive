@@ -36,7 +36,7 @@ public class EntityService extends BaseService<Entity> {
   }
 
   public Flux<Entity> findAll() {
-    log.debug("Inicio y llamo a "+urlData);
+    log.debug("Inicio y llamo a " + urlData);
     var resultWebClient = WebClient.create(urlData).get().retrieve().bodyToMono(Map.class);
     return resultWebClient.map(o -> {
       Object mapResult = ((Map) o.get(RESULT)).get(RESULTS);

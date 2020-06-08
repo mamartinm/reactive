@@ -51,7 +51,7 @@ public class EntityResourceTests {
   void findAll() {
     log.debug("1 peticion");
     webTestClient.get()
-        .uri(REST_API_V_1_ENTITY+"all")
+        .uri(REST_API_V_1_ENTITY + "all")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus().isOk()
@@ -62,7 +62,7 @@ public class EntityResourceTests {
   @Test
   void findAllPaginated() {
     webTestClient.get()
-        .uri(REST_API_V_1_ENTITY+"?page=1&size=5")
+        .uri(REST_API_V_1_ENTITY + "?page=1&size=5")
         .accept(MediaType.APPLICATION_JSON)
         .exchange()
         .expectStatus().isOk()

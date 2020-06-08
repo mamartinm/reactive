@@ -2,11 +2,6 @@ package com.gft.practices.reactive.model.config;
 
 import static com.gft.practices.reactive.beans.utils.Constants.TIMEOUT;
 
-import com.gft.practices.reactive.beans.utils.Constants;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.time.Duration;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
