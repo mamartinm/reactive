@@ -2,6 +2,7 @@ package com.gft.practices.reactive.model.repository;
 
 import static org.springframework.security.config.Elements.HTTP;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.practices.reactive.beans.dto.Entity;
 import com.gft.practices.reactive.beans.utils.Constants;
@@ -9,7 +10,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
